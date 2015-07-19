@@ -1,7 +1,8 @@
 {
+  "name": "myservice0",
   "version": "0.0.1",
-  "run_as": "myservice0",
-  "logfile": "log/current",
+  "run_as": "root",
+  "log_file": "log/current",
   "readme": "README.txt",
   "environment": {
     "VARIABLE_1": 123,

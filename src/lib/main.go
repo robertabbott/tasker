@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-  "os/exec"
+	"os/exec"
 )
 
 type Manifest struct {
@@ -20,8 +20,8 @@ type Manifest struct {
 
 const (
 	MANIFEST_NAME = ".tasker"
-	TAR_PATH = "/data/tasker/tars/"
-  INTERNAL_PATH = "/data/tasker/.internal"
+	TAR_PATH      = "/data/tasker/tars/"
+	INTERNAL_PATH = "/data/tasker/.internal"
 )
 
 var debug *bool
@@ -32,16 +32,16 @@ func getManifestBytes(taskPath string) ([]byte, error) {
 }
 
 func getInput() string {
-    var response string
-    fmt.Scanln(&response)
-    return response
+	var response string
+	fmt.Scanln(&response)
+	return response
 }
 
 func Setup(deb *bool) {
-  debug = deb
-  DebugPrintf("Setting up Tasker...")
-  Fatalize(exec.Command("mkdir", "-p", TAR_PATH).Run())
-  Fatalize(exec.Command("mkdir", "-p", INTERNAL_PATH).Run())
+	debug = deb
+	DebugPrintf("Setting up Tasker...")
+	Fatalize(exec.Command("mkdir", "-p", TAR_PATH).Run())
+	Fatalize(exec.Command("mkdir", "-p", INTERNAL_PATH).Run())
 }
 
 func Fatalize(err error) {
@@ -52,23 +52,23 @@ func Fatalize(err error) {
 }
 
 func DebugPrintf(format string, a ...interface{}) {
-  if (*debug) {
-    fmt.Printf(format, a)
-  }
+	if *debug {
+		fmt.Printf(format, a)
+	}
 }
 
 func GetManifest(taskPath string) *Manifest {
 	manifestBytes, err := getManifestBytes(taskPath)
 	if err != nil {
-    DebugPrintf("Error while getting manifest bytes: %s\n", err)
+		DebugPrintf("Error while getting manifest bytes: %s\n", err)
 		return nil
 	}
 	manifest := &Manifest{}
 	err = json.Unmarshal(manifestBytes, manifest)
-  if err != nil {
-    DebugPrintf("Error while unmarshaling manifest: %s\n", err)
-    return nil
-  }
+	if err != nil {
+		DebugPrintf("Error while unmarshaling manifest: %s\n", err)
+		return nil
+	}
 	return manifest
 }
 
@@ -78,11 +78,11 @@ func GetOrCreateManifest(taskPath string) *Manifest {
 		fmt.Printf("The task you specified does not have a valid manifest\n")
 		fmt.Printf("Do you want us to make one for you? [y/N]\n")
 		switch getInput() {
-      case "y", "yes", "yea", "Y", "YES", "SURE", "YEAH", "YEA":
-        break
+		case "y", "yes", "yea", "Y", "YES", "SURE", "YEAH", "YEA":
+			break
 			os.Exit(0)
 		}
-    // TODO Create manifest
+		// TODO Create manifest
 	}
-  return manifest
+	return manifest
 }

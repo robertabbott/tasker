@@ -1,9 +1,9 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
 )
 
 func main() {
-  fmt.Println("Daemon is starting")
+	fmt.Println("Daemon is starting")
 }

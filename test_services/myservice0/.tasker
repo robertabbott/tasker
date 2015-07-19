@@ -5,8 +5,8 @@
   "log_file": "log/current",
   "readme": "README.txt",
   "environment": {
-    "VARIABLE_1": 123,
-    "VARIABLE_2": 234
+    "VARIABLE_1": "123",
+    "VARIABLE_2": "234"
   },
   "create": {
     "commands": [

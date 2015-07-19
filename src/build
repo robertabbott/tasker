@@ -1,0 +1,8 @@
+#! /bin/bash
+
+cd cli 
+go build -o tasker 
+mv tasker ../../bin
+cd ../daemon 
+go build -o tasker-daemon 
+mv tasker-daemon ../../bin

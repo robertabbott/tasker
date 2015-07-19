@@ -1,0 +1,45 @@
+{
+  "version": "0.0.1",
+  "run_as": "myservice0",
+  "logfile": "log/current",
+  "readme": "README.txt",
+  "environment": {
+    "VARIABLE_1": 123,
+    "VARIABLE_2": 234
+  },
+  "create": {
+    "commands": [
+      "bin/create",
+      "bin/myscript.sh",
+      "bin/othersetup.rb"
+    ]
+  },
+  "pre-start": {
+    "command": "bin/pre-start"
+  },
+  "start": {
+    "command": "bin/start"
+  },
+  "post-start": {
+    "command": "bin/pre-start"
+  },
+  "status": {
+    "command": "bin/status"
+  },
+  "destroy": {
+    "command": "bin/destroy"
+  },
+  "pre-stop": {
+    "command": "bin/pre-stop"
+  },
+  "stop": {
+    "command": "bin/stop"
+  },
+  "config": {
+    "numberlist": [
+      1,
+      2
+    ],
+    "string": "asd"
+  }
+}

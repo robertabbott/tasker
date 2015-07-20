@@ -2,6 +2,7 @@ package tasker
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -19,12 +20,15 @@ type Manifest struct {
 }
 
 const (
-	MANIFEST_NAME = ".tasker"
-	TAR_PATH      = "/data/tasker/tars/"
-	INTERNAL_PATH = "/data/tasker/.internal"
+	MANIFEST_NAME   = ".tasker"
+	TAR_PATH        = "/data/tasker/tars/"
+	INTERNAL_PATH   = "/data/tasker/.internal"
+	DAEMON_PID_FILE = "/data/tasker/.internal/PID"
 )
 
-var debug *bool
+var (
+	debug = flag.Bool("debug", false, "Whether or not bebug is on")
+)
 
 func getManifestBytes(taskPath string) ([]byte, error) {
 	manifestPath := fmt.Sprintf("%s/%s", taskPath, MANIFEST_NAME)
@@ -37,8 +41,7 @@ func getInput() string {
 	return response
 }
 
-func Setup(deb *bool) {
-	debug = deb
+func Setup() {
 	DebugPrintf("Setting up Tasker...")
 	Fatalize(exec.Command("mkdir", "-p", TAR_PATH).Run())
 	Fatalize(exec.Command("mkdir", "-p", INTERNAL_PATH).Run())
@@ -55,6 +58,11 @@ func DebugPrintf(format string, a ...interface{}) {
 	if *debug {
 		fmt.Printf(format, a)
 	}
+}
+
+func TellDaemon(command string) {
+	stdinPath := fmt.Sprintf("/proc/%s/fd/0")
+	ioutil.WriteFile(stdinPath, command, 0777)
 }
 
 func GetManifest(taskPath string) *Manifest {

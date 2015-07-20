@@ -3,18 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"os/exec"
 )
 
 var (
-	debug = flag.Bool("debug", false, "Whether or not bebug is on")
-	dir   = flag.Bool("dir", false, "Indicates that you wish to act on a directory")
+	dir = flag.Bool("dir", false, "Indicates that you wish to act on a directory")
 )
 
 // tasker tar .
 func handleTar() {
 	if len(flag.Args()) < 2 {
 		fmt.Printf("Not enough arguments\n")
+		os.Exit(1)
 	}
 	taskPath := flag.Args()[1]
 	fmt.Printf("Creating tar from %s\n", taskPath)
@@ -70,6 +71,15 @@ func handleDestroy() {
 
 }
 
+func handleDaemon() {
+	if len(flag.Args()) < 2 {
+		fmt.Printf("Not enough arguments\n")
+		os.Exit(1)
+	}
+	command := flag.Args()[1]
+	tasker.TellDaemon(fmt.Sprintf("%s\n", command))
+}
+
 func handleNoCommand() {
 	fmt.Println("No command was provided...")
 }
@@ -96,17 +106,20 @@ func handleArgs() {
 		handleUptime()
 	case "tell":
 		handleTell()
+	case "daemon":
+		handleDaemon()
 	default:
 		handleNoCommand()
 	}
 }
 
 func main() {
-	tasker.Setup(debug)
+	tasker.Setup()
 	tasker.DebugPrintf("*****Tasker CLI")
 	flag.Parse()
 	if len(flag.Args()) < 1 {
 		fmt.Printf("You did not provide a command to execute.\n")
 		return
 	}
+	handleArgs()
 }

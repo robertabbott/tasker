@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	tasker "../lib"
 )
 
 func listenStdIn() {
 	var line string
 	for {
 		fmt.Scanln(&line)
+		fmt.Println(line)
 		switch line {
 		case "kill":
 			fmt.Println("Daemon exiting")
@@ -26,6 +29,7 @@ func writePID() {
 func main() {
 	tasker.Setup()
 	fmt.Println("Daemon is starting")
+	os.Stdin, _ = os.Open(tasker.DAEMON_STDIN_FILE)
 	writePID()
 	listenStdIn()
 }

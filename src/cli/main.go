@@ -1,6 +1,8 @@
 package main
 
 import (
+	tasker "../lib"
+
 	"flag"
 	"fmt"
 	"os"

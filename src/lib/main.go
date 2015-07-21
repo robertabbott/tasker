@@ -20,10 +20,13 @@ type Manifest struct {
 }
 
 const (
-	MANIFEST_NAME   = ".tasker"
-	TAR_PATH        = "/data/tasker/tars/"
-	INTERNAL_PATH   = "/data/tasker/.internal"
-	DAEMON_PID_FILE = "/data/tasker/.internal/PID"
+	MANIFEST_NAME = ".tasker"
+	TAR_PATH      = "/data/tasker/tars/"
+	INTERNAL_PATH = "/data/tasker/.internal"
+
+	DAEMON_STDOUT_FILE = "/data/tasker/.internal/DAEMON_STDOUT"
+	DAEMON_STDIN_FILE  = "/data/tasker/.internal/DAEMON_STDIN"
+	DAEMON_PID_FILE    = "/data/tasker/.internal/PID"
 )
 
 var (
@@ -61,8 +64,13 @@ func DebugPrintf(format string, a ...interface{}) {
 }
 
 func TellDaemon(command string) {
-	stdinPath := fmt.Sprintf("/proc/%s/fd/0")
-	ioutil.WriteFile(stdinPath, command, 0777)
+	// stdinPath := fmt.Sprintf("/proc/%s/fd/0")
+	// if _, err := os.Stat(filename); os.IsNotExist(err) {
+	//   fmt.Printf("no such file or directory: %s", filename)
+	//   return
+	// }
+	// }
+	// ioutil.WriteFile(stdinPath, command, 0777)
 }
 
 func GetManifest(taskPath string) *Manifest {

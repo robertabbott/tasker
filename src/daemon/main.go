@@ -12,7 +12,8 @@ func listenStdIn() {
 	var line string
 	for {
 		fmt.Scanln(&line)
-		fmt.Println(line)
+		fmt.Printf("Daemon received stdin: %s\n", line)
+		ioutil.WriteFile("/tmp/lastout", []byte(line), 0777)
 		switch line {
 		case "kill":
 			fmt.Println("Daemon exiting")

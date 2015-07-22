@@ -29,7 +29,6 @@ func writePID() {
 func main() {
 	tasker.Setup()
 	fmt.Println("Daemon is starting")
-	os.Stdin, _ = os.Open(tasker.DAEMON_STDIN_FILE)
 	writePID()
 	listenStdIn()
 }

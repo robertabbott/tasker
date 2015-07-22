@@ -1,17 +1,17 @@
 #### Metadata
 FROM ubuntu:latest
-MAINTAINER Antoine Pourchet
+MAINTAINER Antoine Pourchet <antoine.pourchet@gmail.com>
 
 #### Image Building
 USER root
+ENV HOME /root
+
 RUN sudo apt-get update
-RUN sudo apt-get install -y git
-# ADD /some/path/local /some/path/image
-ENV VARIABLE value
-# EXPOSE 8080
+RUN sudo apt-get install -y man git vim zsh curl
+
+RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
+      && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc \
+      && chsh -s /bin/zsh
 
 #### Provisioning
-ENTRYPOINT /bin/bash
-CMD mkdir /root/tasker
-CMD echo "Hello there"
-# VOLUME 
+ENTRYPOINT /usr/bin/zsh

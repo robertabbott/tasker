@@ -3,17 +3,20 @@ package main
 import (
 	tasker "../lib"
 
+	"archive/tar"
+	"bytes"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
-	"os/exec"
+	"strings"
 )
 
 var (
 	dir = flag.Bool("dir", false, "Indicates that you wish to act on a directory")
 )
 
-// tasker tar .
 func handleTar() {
 	if len(flag.Args()) < 2 {
 		fmt.Printf("Not enough arguments\n")
@@ -23,13 +26,12 @@ func handleTar() {
 	fmt.Printf("Creating tar from %s\n", taskPath)
 
 	manifest := tasker.GetOrCreateManifest(taskPath)
-	tarName := fmt.Sprintf("%s/%s-%s.tar.gz", tasker.TAR_PATH,
-		manifest.Name, manifest.Version)
-	cmd := exec.Command("tar", "-czf", tarName, taskPath)
-	out, err := cmd.CombinedOutput()
-	tasker.DebugPrintf("Output of tar command: %s\n", string(out))
-	tasker.Fatalize(err)
-	fmt.Println("Done")
+	tarName := fmt.Sprintf("%s/%s-%s.tar.gz", tasker.TAR_PATH, manifest.Name, manifest.Version)
+
+	err := TarFile(tarName, taskPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func handleCreate() {
@@ -113,6 +115,36 @@ func handleArgs() {
 	default:
 		handleNoCommand()
 	}
+}
+
+func TarFile(tarName, filePath string) error {
+	buf := new(bytes.Buffer)
+	tarWriter := tar.NewWriter(buf)
+
+	body, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	parts := strings.Split(filePath, "/")
+	header := &tar.Header{
+		Name: parts[len(parts)-1],
+		Size: int64(len(body)),
+	}
+	if err := tarWriter.WriteHeader(header); err != nil {
+		return err
+	}
+	if _, err := tarWriter.Write(body); err != nil {
+		return err
+	}
+	if err := tarWriter.Close(); err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(tarName, buf.Bytes(), 0644); err != nil {
+		return err
+	}
+	fmt.Println("Done")
+	return nil
 }
 
 func main() {
